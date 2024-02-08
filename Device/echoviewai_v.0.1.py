@@ -3,6 +3,7 @@ import digitalio
 from PIL import Image, ImageDraw, ImageFont
 import adafruit_ssd1306
 import subprocess
+import textwrap
 
 # Create the I2C interface.
 i2c = board.I2C()
@@ -22,25 +23,33 @@ image = Image.new('1', (width, height))
 # Get drawing object to draw on image.
 draw = ImageDraw.Draw(image)
 
-# Define some constants to allow easy resizing of shapes.
+# Define constants for text display.
 padding = -2
 top = padding
-bottom = height - padding
 x = 0
 
 # Load default font.
 font = ImageFont.load_default()
 
-# Define update_display function
+# Calculate the width and height of a character drawn with the font.
+char_width, char_height = font.getsize('A')
+
+# Define the update_display function to include text wrapping.
 def update_display(text):
     # Clear the display image.
     draw.rectangle((0, 0, width, height), outline=0, fill=0)
-    # Draw the text.
-    draw.text((x, top), text, font=font, fill=255)
-    # Display image.
+    
+    # Wrap the text and draw it on the display.
+    for i, line in enumerate(textwrap.wrap(text, width // char_width)):
+        # Stop if there's no more room on the display.
+        if i * char_height >= height:
+            break
+        # Draw the text line by line.
+        draw.text((x, top + i * char_height), line, font=font, fill=255)
+    
+    # Display the image.
     oled.image(image)
     oled.show()
-
 # Command to execute the stream program
 command = "make -j stream && ./stream -m models/ggml-tiny.en.bin --step 4000 --length 8000 -c 0 -t 4 -ac 1024"
 
