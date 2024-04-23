@@ -1,6 +1,23 @@
 import SwiftUI
 import CoreData
 
+struct AnimatedGradBackground: View {
+    @State private var isAnimating = false
+
+    let gradientColors = [Gradient(colors: [Color.purple.opacity(0.3), Color.blue.opacity(0.3), Color.purple.opacity(0.3
+                                                                                                                    )])]
+    let timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
+
+    var body: some View {
+        LinearGradient(gradient: gradientColors[0], startPoint: isAnimating ? .topLeading : .bottomTrailing, endPoint: isAnimating ? .bottomTrailing : .topLeading)
+            .animation(Animation.easeInOut(duration: 5).repeatForever(autoreverses: false), value: isAnimating)
+            .onReceive(timer) { _ in
+                isAnimating.toggle()
+            }
+            .edgesIgnoringSafeArea(.all)
+    }
+}
+
 struct TranscriptionHistoryView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @FetchRequest(
@@ -11,13 +28,14 @@ struct TranscriptionHistoryView: View {
 
     var body: some View {
         ZStack {
-            // Background gradient
-            LinearGradient(gradient: Gradient(colors: [Color.purple.opacity(0.6), Color.blue.opacity(0.6)]), startPoint: .top, endPoint: .bottom)
-                .edgesIgnoringSafeArea(.all)
-
+            //Background Color
+//            Color.white.edgesIgnoringSafeArea(.all) // Set background to white for a sleek look
+            AnimatedGradBackground()
+            
             VStack {
                 // Search bar
                 TextField("Search", text: $searchQuery)
+                    .font(.custom("Jersey 10", size: 20))
                     .padding(10)
                     .background(Color.white.opacity(0.5))
                     .cornerRadius(8)
@@ -37,20 +55,19 @@ struct TranscriptionHistoryView: View {
                                 .foregroundColor(.white)
                             Text("\(transcription.date ?? Date(), formatter: dateFormatter)")
                                 .font(.subheadline)
-                                .foregroundColor(.white.opacity(0.7))
+                                .foregroundColor(.purple.opacity(0.7))
                             Text(transcription.transcript ?? "No Transcript")
                                 .font(.body)
-                                .foregroundColor(.white)
+                                .foregroundColor(.black)
                         }
-                        .listRowBackground(Color.black.opacity(0.3))
+                        .listRowBackground(Color.gray.opacity(0.3))
                     }
                     .onDelete(perform: deleteItems)
                 }
                 .listStyle(PlainListStyle())
             }
         }
-        .navigationTitle("Transcription History")
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitle("", displayMode: .inline)
     }
 
     private var filteredTranscriptions: [Transcription] {
