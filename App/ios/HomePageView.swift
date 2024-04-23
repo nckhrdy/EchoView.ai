@@ -1,76 +1,77 @@
 import SwiftUI
+import CoreBluetooth
 
 struct HomePageView: View {
     @EnvironmentObject var bluetoothManager: BluetoothManager
     @Environment(\.managedObjectContext) var managedObjectContext
     @State private var navigateToContentView = false
-    
+    @State private var isScanning = false
+    @State private var selectedPeripheral: CBPeripheral?
+    @State private var pulse = false
+
     var body: some View {
         NavigationView {
             ZStack {
-                // Background layer with gradient
-                LinearGradient(gradient: Gradient(colors: [Color.purple.opacity(0.6), Color.blue.opacity(0.6)]), startPoint: .top, endPoint: .bottom)
-                    .edgesIgnoringSafeArea(.all)
+                Image("Gray Building Low Angle") // Set your photo name here
+                    .resizable()
+                    .aspectRatio(contentMode: .fill) // Fill the entire background
+                    .frame(maxWidth: .infinity, maxHeight: .infinity) // Fill the entire screen
+                    .edgesIgnoringSafeArea(.all) // Extend to the edges of the display
 
-                // Content layer
                 VStack {
-                    // App Name Header
                     Text("EchoView.ai")
-                        .font(.system(size: 34, weight: .bold, design: .rounded))
-                        .foregroundColor(.white)
+                        .font(.custom("Jersey 10", size: 50)) // Use custom font "Jersey 10"
+                        .foregroundColor(Color.purple) // Use the dark purple color defined
                         .padding(.top, 50)
                     
-                    Spacer()
-                    
-                    // Scan for Devices Button
+                    Spacer(minLength: 20)
+
                     Button(action: {
-                        if bluetoothManager.isScanning {
-                            bluetoothManager.stopScanning()
-                        } else {
+                        isScanning.toggle()
+                        if isScanning {
                             bluetoothManager.startScanning()
+                        } else {
+                            bluetoothManager.stopScanning()
                         }
                     }) {
-                        HStack {
-                            Image(systemName: bluetoothManager.isScanning ? "stop.fill" : "antenna.radiowaves.left.and.right")
-                                .font(.title)
-                            Text(bluetoothManager.isScanning ? "Stop Scanning" : "Scan for Devices")
-                                .fontWeight(.medium)
-                        }
-                        .frame(minWidth: 0, maxWidth: .infinity)
-                        .padding()
-                        .foregroundColor(.white)
-                        .background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .leading, endPoint: .trailing))
-                        .cornerRadius(40)
-                        .padding(.horizontal)
+                        Label(isScanning ? "Stop Scanning" : "Scan for Glasses", systemImage: isScanning ? "stop.fill" : "antenna.radiowaves.left.and.right")
+                            .font(.custom("Jersey 10", size: 30))
+                            .padding()
+                            .foregroundColor(.white)
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                            .background(Color.purple) // Using a dark purple color
+                            .cornerRadius(40)
+                            .padding(.horizontal)
                     }
-                    .padding(.bottom, 20)
+                    .padding(.bottom, isScanning ? 10 : 20)
                     
-                    // List of Discovered Peripherals
-                    List(bluetoothManager.discoveredPeripherals, id: \.identifier) { peripheral in
+                    if isScanning, let firstPeripheral = bluetoothManager.discoveredPeripherals.first {
                         Button(action: {
-                            bluetoothManager.connect(to: peripheral)
+                            selectedPeripheral = firstPeripheral
+                            bluetoothManager.connect(to: firstPeripheral)
+                            navigateToContentView = true
                         }) {
-                            Text(peripheral.name ?? "Unknown Device")
-                                .fontWeight(.medium)
-                                .padding()
-                                .frame(minWidth: 0, maxWidth: .infinity)
-                                .background(Color.white.opacity(0.3))
-                                .foregroundColor(.white)
-                                .cornerRadius(40)
+                            Image(systemName: "eyeglasses")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .padding(30)
+                                .frame(width: 150, height: 150)
+                                .background(Color.white) // Button background as white
+                                .foregroundColor(.purple)
+                                .clipShape(Circle())
+                                .shadow(radius: 10) // Add shadow for depth
                         }
-                        .padding(.horizontal)
-                        .listRowBackground(Color.clear)
                     }
-                    .listStyle(PlainListStyle())
 
                     Spacer()
                 }
-                .onChange(of: bluetoothManager.isConnected) { isConnected in
-                    navigateToContentView = isConnected
-                }
-                .background(NavigationLink(destination: ContentView(bluetoothManager: bluetoothManager).environment(\.managedObjectContext, managedObjectContext), isActive: $navigateToContentView) { EmptyView() })
+                .padding(.horizontal, 20)
+            }
+            .navigationBarHidden(true)
+            .fullScreenCover(isPresented: $navigateToContentView) {
+                ContentView(bluetoothManager: bluetoothManager).environment(\.managedObjectContext, managedObjectContext)
+                    .transition(AnyTransition.scale.animation(.easeInOut(duration: 0.9)))
             }
         }
-        .navigationBarHidden(true)
     }
 }
