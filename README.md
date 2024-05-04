@@ -21,17 +21,12 @@ EchoView.ai glasses are powered by an ESP32-C3, featuring MEMS microphones for a
 ### Hardware Setup
 1. Connect the MEMS microphones to the ESP32-C3.
 2. Attach the OLED display to the ESP32-C3.
-3. Ensure all connections are secure and the system is powered.
+3. Ensure all connections are secure and the system is powered (3.3v).
 
 ### Software Setup
-1. Install the latest Raspbian OS on your ESP32-C3.
-2. Clone this repository to your ESP32-C3.
-3. Navigate to the repository directory and run the setup script:
+1. Clone this repository to your ESP32-C3.
+2. Navigate to the /Device directory and flash the echoview_esp32_v1.ino file onto the ESP32.
 
-```bash
-cd EchoView.ai
-sudo ./install.sh
-```
 
 ## Usage
 ### Starting the Device
@@ -39,11 +34,13 @@ Power on the EchoView.ai glasses. The device will automatically boot up and the 
 
 ### Using the Mobile App
 1. Download the EchoView.ai app from the iOS App Store.
-2. Open the app and pair it with your EchoView.ai glasses via Bluetooth.
-3. Customize settings such as text size and display duration through the app.
+2. Press and hold the button on the side of the headset for 3 seconds until device flashes 3 times
+3. Navitage to Bluetooth in device Settings and connect to headset
+3. Open the app and pair it with your EchoView.ai glasses
+4. Start Transcribing!
 
 ### Daily Operation
-Simply wear the glasses as you would any regular glasses. Conversations will be transcribed in real-time and displayed on the OLED screen.
+Simply wear the glasses as you would any regular glasses. Conversations will be transcribed in real-time and displayed in your field of view.
 
 ## Safety and Maintenance
 - Keep the device dry and avoid exposure to extreme temperatures.
