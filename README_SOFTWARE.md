@@ -12,8 +12,7 @@ EchoView.AI is designed to enhance communication accessibility for the deaf and 
 #### Overview
 The iOS Swift application serves as the user interface for the EchoView.AI system, providing real-time speech transcription, Bluetooth management, and user settings customization. Developed using SwiftUI and Swift 5, the app leverages advanced iOS frameworks like CoreBluetooth for BLE communications and CoreData for data persistence.
 
-![Swift App](images/swift_app.png)
-![Swift App Interface](images/swift_interface.png)
+![Swift App](images/app_collage.png)
 
 #### Key Components
 - ContentView.swift: The root view of the application, managing the main user interface elements and interactions.
