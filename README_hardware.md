@@ -6,10 +6,18 @@ Our EchoView.ai device is a wearable technology enabling real-time speech-to-tex
 
 ## Schematic and CAD Diagrams
 
-- **Circuit Schematic**: Download the detailed circuit schematic of the system components in PDF format [here].
+- **System Schematic**:
+<div align="center">
+  <img src="https://github.com/nckhrdy/EchoView.ai/assets/91172956/842b2ac2-62e7-4380-88d8-c05dd4628065" alt="Screenshot 2024-05-13 at 12 41 10 PM" width="600">
+</div>
+
 - **CAD Diagrams**:  
   - The CAD diagrams detail the physical configuration of the system's key modules.
-  - **Insert CAD Screenshot Here**  
+<div align="center">
+  <img src="https://github.com/nckhrdy/EchoView.ai/assets/91172956/cf7f9104-baea-48a8-bd02-6e63cc50402a" alt="Screenshot 2024-05-13 at 12 29 44 PM" width="500">
+  <br>
+  <img src="https://github.com/nckhrdy/EchoView.ai/assets/91172956/9e68381f-9273-460c-a546-c4b298654ec3" alt="Screenshot 2024-05-13 at 12 30 15 PM" width="500">
+</div>
 
 ## Bill of Materials (BOM)
 
